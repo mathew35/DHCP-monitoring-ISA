@@ -62,9 +62,9 @@ Lze předpokládat, že pcap/síťové rozhraní bude mít k dispozici kompletn�
 
 ### Odevzdaný projekt musí obsahovat:
 
-soubor se zdrojovým kódem,\
-funkční Makefile pro překlad zdrojového souboru,\
-dokumentaci (soubor manual.pdf), která bude obsahovat uvedení do problematiky, návrhu aplikace, popis implementace, základní informace o programu, návod na použití. V dokumentaci se očekává následující: titulní strana, obsah, logické strukturování textu, přehled nastudovaných informací z literatury, popis zajímavějších pasáží implementace, použití vytvořených programů a literatura.\
-soubor dhcp-stats.1 ve formátu a syntaxi manuálové stránky - viz https://liw.fi/manpages/\
-Vypracovaný projekt uložený v archívu .tar a se jménem xlogin00.tar odevzdejte elektronicky přes IS. Soubor nekomprimujte.
+* soubor se zdrojovým kódem,\
+* funkční Makefile pro překlad zdrojového souboru,\
+* dokumentaci (soubor manual.pdf), která bude obsahovat uvedení do problematiky, návrhu aplikace, popis implementace, základní informace o programu, návod na použití. V dokumentaci se očekává následující: titulní strana, obsah, logické strukturování textu, přehled nastudovaných informací z literatury, popis zajímavějších pasáží implementace, použití vytvořených programů a literatura.\
+* soubor dhcp-stats.1 ve formátu a syntaxi manuálové stránky - viz https://liw.fi/manpages/\
+* Vypracovaný projekt uložený v archívu .tar a se jménem xlogin00.tar odevzdejte elektronicky přes IS. Soubor nekomprimujte.
  

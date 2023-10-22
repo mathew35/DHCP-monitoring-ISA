@@ -57,7 +57,7 @@ Programovací jazyk může být C/C++\
 Pro syslog použijte standardní logovací rutinu syslog (man 3 syslog, nebo příklad zde)\
 Lze využít knihovnu libpcap\
 Pro práci s terminálem lze využít např. knihovny ncurses při programování v jazyce C\
-Lze předpokládat, že pcap/síťové rozhraní bude mít k dispozici kompletní DHCP komunikaci, tj. jako kdyby byl nástroj spuštěn přímo na DHCP serveru.\
+Lze předpokládat, že pcap/síťové rozhraní bude mít k dispozici kompletní DHCP komunikaci, tj. jako kdyby byl nástroj spuštěn přímo na DHCP serveru.
 ## Odevzdání:
 
 ### Odevzdaný projekt musí obsahovat:

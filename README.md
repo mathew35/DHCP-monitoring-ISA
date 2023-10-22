@@ -20,7 +20,7 @@ Tento problém se v praxi řeší typicky pomocí parsingu přidělených adres 
 ./dhcp-stats [-r <filename>] [-i <interface-name>] <ip-prefix> [ <ip-prefix> [ ... ] ]
 
 -r <filename> - statistika bude vytvořena z pcap souborů\
--i <interface> - rozhraní, na kterém může program naslouchat\
+-i <interface> - rozhraní, na kterém může program naslouchat
 
 <ip-prefix> - rozsah sítě pro které se bude generovat statistika
 
@@ -41,7 +41,7 @@ V případě, že počet alokovaných adres v prefixu překročí 50%, program t
 IP-Prefix Max-hosts Allocated addresses Utilization\
 192.168.0.0/22 1022 123 12.04%\
 192.168.1.0/24 254 123 48.43%\
-172.16.32.0/24 254 15 5.9%\
+172.16.32.0/24 254 15 5.9%
 
 Program by při spuštění na síťovém rozhraní měl fungovat jako konzolová aplikace. Tedy měly by se aktualizovat pouze řádky s prefixy. Pro tyto účely lze využít např. knihovnu ncurses.
 
@@ -66,5 +66,5 @@ soubor se zdrojovým kódem,\
 funkční Makefile pro překlad zdrojového souboru,\
 dokumentaci (soubor manual.pdf), která bude obsahovat uvedení do problematiky, návrhu aplikace, popis implementace, základní informace o programu, návod na použití. V dokumentaci se očekává následující: titulní strana, obsah, logické strukturování textu, přehled nastudovaných informací z literatury, popis zajímavějších pasáží implementace, použití vytvořených programů a literatura.\
 soubor dhcp-stats.1 ve formátu a syntaxi manuálové stránky - viz https://liw.fi/manpages/\
-Vypracovaný projekt uložený v archívu .tar a se jménem xlogin00.tar odevzdejte elektronicky přes IS. Soubor nekomprimujte.\
+Vypracovaný projekt uložený v archívu .tar a se jménem xlogin00.tar odevzdejte elektronicky přes IS. Soubor nekomprimujte.
  

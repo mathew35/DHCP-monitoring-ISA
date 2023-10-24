@@ -10,19 +10,21 @@ Monitorování DHCP komunikace (Matěj Grégr)
 ### Vedoucí:
 Ing. Matěj Grégr, Ph.D.
 ### Literatura:
-http://liw.fi/manpages/ RFC 2131 - DHCP protocol, https://datatracker.ietf.org/doc/html/rfc2131 NCURSES HOWTO: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/
+http://liw.fi/manpages/\
+RFC 2131 - DHCP protocol, https://datatracker.ietf.org/doc/html/rfc2131\
+NCURSES HOWTO: https://tldp.org/HOWTO/NCURSES-Programming-HOWTO/
 ## Popis:
 Vaším úkolem je vytvořit program, který umožní získat statistiku o vytížení síťového prefixu z pohledu množství alokovaných IP adres. Při zaplnění prefixu z více jako 50%, nástroj informuje administrátora na standardní výstup a zalogováním skrz syslog server.
 
 Tento problém se v praxi řeší typicky pomocí parsingu přidělených adres z logu DHCP serveru, případně tuto informaci může někdy poskytnout přímo DHCP server. Cílem projektu je vyřešit situaci, kdy DHCP server tuto možnost nepodporuje a pro získání daných statistik je možné monitorovat DHCP provoz.
 
 ## Příklad spuštění:
-./dhcp-stats [-r <filename>] [-i <interface-name>] <ip-prefix> [ <ip-prefix> [ ... ] ]
+./dhcp-stats [-r \<filename>] [-i \<interface-name>] \<ip-prefix> [ \<ip-prefix> [ ... ] ]
 
--r <filename> - statistika bude vytvořena z pcap souborů\
--i <interface> - rozhraní, na kterém může program naslouchat
+-r \<filename> - statistika bude vytvořena z pcap souborů\
+-i \<interface> - rozhraní, na kterém může program naslouchat
 
-<ip-prefix> - rozsah sítě pro které se bude generovat statistika
+\<ip-prefix> - rozsah sítě pro které se bude generovat statistika
 
 Např.
 ./dhcp-stats -i eth0 192.168.1.0/24 192.168.0.0/22 172.16.32.0/24
@@ -62,9 +64,9 @@ Lze předpokládat, že pcap/síťové rozhraní bude mít k dispozici kompletn�
 
 ### Odevzdaný projekt musí obsahovat:
 
-* soubor se zdrojovým kódem,\
-* funkční Makefile pro překlad zdrojového souboru,\
-* dokumentaci (soubor manual.pdf), která bude obsahovat uvedení do problematiky, návrhu aplikace, popis implementace, základní informace o programu, návod na použití. V dokumentaci se očekává následující: titulní strana, obsah, logické strukturování textu, přehled nastudovaných informací z literatury, popis zajímavějších pasáží implementace, použití vytvořených programů a literatura.\
-* soubor dhcp-stats.1 ve formátu a syntaxi manuálové stránky - viz https://liw.fi/manpages/\
+* soubor se zdrojovým kódem
+* funkční Makefile pro překlad zdrojového souboru
+* dokumentaci (soubor manual.pdf), která bude obsahovat uvedení do problematiky, návrhu aplikace, popis implementace, základní informace o programu, návod na použití. V dokumentaci se očekává následující: titulní strana, obsah, logické strukturování textu, přehled nastudovaných informací z literatury, popis zajímavějších pasáží implementace, použití vytvořených programů a literatura
+* soubor dhcp-stats.1 ve formátu a syntaxi manuálové stránky - viz https://liw.fi/manpages/
 * Vypracovaný projekt uložený v archívu .tar a se jménem xlogin00.tar odevzdejte elektronicky přes IS. Soubor nekomprimujte.
  

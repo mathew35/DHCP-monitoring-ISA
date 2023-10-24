@@ -1,0 +1,36 @@
+.TH DHCP-STATS 1
+.SH NAME
+dhcp-stats \- DHCP traffic statistics generator 
+.SH SYNOPSIS
+.nf
+\fBdhcp-stats \-r\fR <filename> <ip-prefix> [<ip-prefix>[...]]
+\fBdhcp-stats \-i\fR <interface-name> <ip-prefix> [<ip-prefix>[...]]
+.fi
+.SH DESCRIPTION
+.nf
+\fBDhcp-stats\fR generates statistics of network prefix traffic based on ammount of allocated IP addresses.
+When prefix traffic is more or equal to 50%, informs using syslog server and STDOUT.
+.fi
+.SH OPTIONS
+.TP
+.BR \-r\fR\ <filename>
+Create statistics from pcap \fIfile\fR
+
+.TP
+.BR \-i\fR\ <interface-name>
+.nf
+Create statistics from traffic picked up from continous listening on the \fIinterface\fR
+
+Currently only ethernet is supported
+.fi
+.TP
+.nf
+<ip-prefix>
+Network range for which statistics will be generated. More prefixes can be given, see \fBEXAMPLES\fR
+.fi
+.SH EXAMPLES
+.nf
+dhcp-stats -r file.pcap 192.168.0.1/16
+dhcp-stats -r file.pcap 192.168.0.1/16 192.168.10.1/24 192.168.200.32/4
+dhcp-stats -i eth0 192.168.0.1/16 192.168.10.1/24
+.fi

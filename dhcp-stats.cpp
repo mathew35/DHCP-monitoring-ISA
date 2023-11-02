@@ -228,8 +228,8 @@ void update_win() {
             std::string log_str = "prefix " + ip_prefix + " exceeded 50%% of allocations";
             syslog(LOG_INFO, log_str.c_str());
         }
-        char buffer[7] = "      ";
-        sprintf(buffer, "%.2f", utilization);
+        char buffer[6] = "";
+        sprintf(buffer, "%6.2f", utilization);
         std::string util = std::string(buffer).append("%%");
         mvprintw(i, 0, (char *)(ip_prefix.c_str()));
         mvprintw(i, pos[1], (char *)std::to_string(max_hosts).c_str());

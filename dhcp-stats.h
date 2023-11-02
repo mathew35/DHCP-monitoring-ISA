@@ -5,8 +5,8 @@
  * @brief DHCP monitoring
  */
 #define UDP_HDR_LEN 8
-#define v_map std::map<std::string, std::string>
-#define p_map std::map<std::tuple<std::string, int>, v_map>
+#define dhcp_map std::map<std::string, dhcp_monitor>
+#define p_map std::map<std::string, std::tuple<int, dhcp_map>>
 
 struct dhcp {
     uint8_t op;
@@ -24,10 +24,15 @@ struct dhcp {
     char sname[64];
     char file[128];
     char magic_cookie[4];
-    char options[308];
+    char options[312];
 };
-
-int update_win(p_map stats);
+struct dhcp_monitor {
+    time_t lease_time;
+    timeval time;
+    in_addr ip_addr;
+    bool rm;
+};
+void update_win();
 
 int start_ncurses();
 
@@ -35,3 +40,7 @@ int argparse(int argc, char **argv);
 
 void handle_pcap(u_char *user, const pcap_pkthdr *h,
                  const u_char *bytes);
+
+p_map *global_map();
+
+void update_global_map(dhcp_monitor mon);

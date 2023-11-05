@@ -9,7 +9,7 @@
 #define p_map std::map<std::string, std::tuple<int, dhcp_map>>
 useconds_t *U_SLEEP = nullptr;
 bool STEP = false;
-timeval time_now;
+timeval time_now = {0, 0};
 
 struct dhcp {
     uint8_t op;
@@ -42,6 +42,8 @@ int start_ncurses();
 
 void exit_prog(int exit_code, std::string msg);
 
+void exit_handler(int status);
+
 int argparse(int argc, char **argv);
 
 void handle_pcap(u_char *user, const pcap_pkthdr *h,
@@ -50,3 +52,5 @@ void handle_pcap(u_char *user, const pcap_pkthdr *h,
 p_map *global_map();
 
 void update_global_map(dhcp_monitor mon);
+
+void check_lease_time(timeval tv);

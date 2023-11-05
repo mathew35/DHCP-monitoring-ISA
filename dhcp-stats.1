@@ -3,8 +3,8 @@
 dhcp-stats \- DHCP traffic statistics generator 
 .SH SYNOPSIS
 .nf
-\fBdhcp-stats \-r\fR <filename> <ip-prefix> [<ip-prefix>[...]]
-\fBdhcp-stats \-i\fR <interface-name> <ip-prefix> [<ip-prefix>[...]]
+\fBdhcp-stats \-r\fR <filename> <ip-prefix> [<ip-prefix>[...]][-s]
+\fBdhcp-stats \-i\fR <interface-name> <ip-prefix> [<ip-prefix>[...]][-s]
 .fi
 .SH DESCRIPTION
 .nf
@@ -24,9 +24,21 @@ Currently only ethernet type interface is supported
 .TP
 <ip-prefix>
 Network range for which statistics will be generated. Prefix is in format N.N.N.N/X where N is from range 0-255 and X is from range 0-32. More prefixes can be given, see \fBEXAMPLES\fR
+.TP
+.BR \-s
+Activate stepping mode. Use any keypress to process next packet.
+
+\fB!WARNING! \fR arrow and other keys may input more than 1 character therefore progressing the program accordingly.
+
+By default program progesses automaticaly: 
+.br
+    Read-from-file mode: stepping every 400ms.
+.br
+    Read-from-interface mode: stepping every packet as it comes.
+
 .SH EXAMPLES
 .nf
-dhcp-stats -r file.pcap 192.168.0.1/16
+dhcp-stats -r file.pcap -s 192.168.0.1/16
 dhcp-stats -r file.pcap 192.168.0.1/16 192.168.10.1/24 192.168.200.32/4
-dhcp-stats -i eth0 192.168.0.1/16 192.168.10.1/24
+dhcp-stats -i eth0 192.168.0.1/16 192.168.10.1/24 -s
 .fi

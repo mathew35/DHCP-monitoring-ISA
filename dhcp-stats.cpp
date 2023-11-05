@@ -223,7 +223,7 @@ void exit_prog(int exit_code, std::string msg) {
     exit(exit_code);
 }
 void update_win() {
-    int pos[] = {0, 19, 30, 41};
+    int pos[] = {0, 19, 30, 41, 50};
     mvprintw(0, pos[0], "IP-Prefix");
     mvprintw(0, pos[1], "Max-hosts");
     mvprintw(0, pos[2], "Allocated");
@@ -250,6 +250,9 @@ void update_win() {
         mvprintw(i, pos[1], (char *)std::to_string(max_hosts).c_str());
         mvprintw(i, pos[2], (char *)std::to_string(allocation).c_str());
         mvprintw(i, pos[3], (char *)util.c_str());
+        if (utilization >= 50) {
+            mvprintw(i, pos[4], "!!! over 50% !!!");
+        }
         i++;
     }
     refresh();

@@ -324,4 +324,3 @@ void update_global_map(dhcp_monitor mon) {
         }
     }
 }
-}

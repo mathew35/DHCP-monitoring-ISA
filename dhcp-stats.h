@@ -7,6 +7,9 @@
 #define UDP_HDR_LEN 8
 #define dhcp_map std::map<std::string, dhcp_monitor>
 #define p_map std::map<std::string, std::tuple<int, dhcp_map>>
+useconds_t *U_SLEEP = nullptr;
+bool STEP = false;
+timeval time_now;
 
 struct dhcp {
     uint8_t op;
@@ -32,9 +35,12 @@ struct dhcp_monitor {
     in_addr ip_addr;
     bool rm;
 };
+
 void update_win();
 
 int start_ncurses();
+
+void exit_prog(int exit_code, std::string msg);
 
 int argparse(int argc, char **argv);
 

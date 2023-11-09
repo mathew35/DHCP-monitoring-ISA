@@ -97,7 +97,7 @@ int main(int argc, char **argv) {
         uint32_t max_hosts = std::pow(2, (32 - prefix)) - 2;
         // create dummy value with computed max_hosts
         dhcp_map d_map = {};
-        global_map()->emplace(ip_prefix, std::tuple(max_hosts, d_map));
+        global_map()->emplace(ip_prefix, std::tuple<uint32_t, dhcp_map>(max_hosts, d_map));
     }
     start_ncurses();
     // show table before 1st packet
@@ -135,8 +135,8 @@ void handle_pcap(u_char *user, const pcap_pkthdr *header, const u_char *packet) 
         return;
     }
     udphdr *udp_hdr = (udphdr *)(packet + ETHER_HDR_LEN + ip_hdr->ip_hl * 4);
-    int sport = ntohs(udp_hdr->uh_sport);
-    int dport = ntohs(udp_hdr->uh_dport);
+    int sport = ntohs(udp_hdr->source);
+    int dport = ntohs(udp_hdr->dest);
     // skip non dhcp packets
     if (sport == dport || 67 > sport || sport > 68 || 67 > dport || dport > 68) return;
 
@@ -207,11 +207,10 @@ void handle_pcap(u_char *user, const pcap_pkthdr *header, const u_char *packet) 
     if (time_now.tv_sec == 0) {
         time_now = header->ts;
     }
+    time_now = header->ts;
+    check_lease_time();
     update_global_map(dhcp_mon);
-    check_lease_time(header->ts);
     update_win();
-    usleep(*U_SLEEP);
-    if (STEP) getch();
 }
 
 int start_ncurses() {
@@ -246,7 +245,7 @@ void update_win() {
     p_map::iterator stats_iter = stats->begin();
     int i = 1;
     std::string ip_prefix = "";
-    int max_hosts = 0;
+    uint32_t max_hosts = 0;
     int allocation = 0;
     float utilization = 0;
     for (; stats_iter != stats->end(); stats_iter++) {
@@ -267,6 +266,8 @@ void update_win() {
         i++;
     }
     refresh();
+    usleep(*U_SLEEP);
+    if (STEP) getch();
 }
 p_map *global_map() {
     static p_map map = {};
@@ -291,7 +292,9 @@ void update_global_map(dhcp_monitor mon) {
                 msg << "Error converting ip from prefix to binary network format: " << prefix_ip << std::endl;
                 exit_prog(1, msg.str());
             }
-            uint32_t mask = (0xFFFFFFFFu >> (32 - std::stoi(prefix_mask_bits)));
+            // split bit shifting due to undefined behaviour
+            uint32_t mask = (0xFFFFFFFFu << (30 - std::stoi(prefix_mask_bits)) << 2);
+            ip = ntohl(ip);
             mask_map.emplace(map_iter->first, std::array<uint32_t, 2>{ip, mask});
         }
     }
@@ -300,7 +303,8 @@ void update_global_map(dhcp_monitor mon) {
         uint32_t mask = mask_map[map_iter->first][1];
         uint32_t prefix_ip = mask_map[map_iter->first][0];
         // process DHCP release/ack
-        if (((uint32_t)mon.ip_addr.s_addr & mask) == (prefix_ip & mask)) {
+
+        if ((ntohl(mon.ip_addr.s_addr) & mask) == (prefix_ip & mask)) {
             dhcp_map *d_map = &std::get<1>(map_iter->second);
             // DHCPRELEASE
             if (mon.rm) {
@@ -319,8 +323,8 @@ void update_global_map(dhcp_monitor mon) {
                 utilization_before = (float)d_map->size() / std::get<0>(map_iter->second) * 100;
                 d_map->emplace(inet_ntoa(mon.ip_addr), mon);
                 utilization_now = (float)d_map->size() / std::get<0>(map_iter->second) * 100;
-                if (utilization_now > 50 and utilization_before < utilization_now) {
-                    std::string log_str = "prefix " + map_iter->first + " exceeded 50%% of allocations";
+                if (utilization_now >= 50 and utilization_before < utilization_now) {
+                    std::string log_str = "prefix " + map_iter->first + " exceeded 50%% of allocations" + std::to_string(utilization_now) + "," + std::to_string(utilization_before) + ",time: " + std::to_string(time_now.tv_sec) + "." + std::to_string(time_now.tv_usec) + "," + std::to_string(mon.time.tv_sec) + "." + std::to_string(mon.time.tv_usec) + " addr: " + inet_ntoa(mon.ip_addr);
                     syslog(LOG_INFO, log_str.c_str());
                 }
             }
@@ -328,20 +332,22 @@ void update_global_map(dhcp_monitor mon) {
     }
 }
 
-void check_lease_time(timeval tv) {
+void check_lease_time() {
     p_map *g_map = global_map();
+    bool update = false;
     for (p_map::iterator map_iter = g_map->begin(); map_iter != g_map->end(); map_iter++) {
         dhcp_map *d_map = &std::get<1>(map_iter->second);
         dhcp_map::iterator d_map_iter = d_map->begin();
         while (d_map_iter != d_map->end()) {
             timeval dhcp_time = d_map_iter->second.time;
             time_t lease_time = d_map_iter->second.lease_time;
-            if (dhcp_time.tv_sec - time_now.tv_sec >= lease_time) {
+            if (time_now.tv_sec - dhcp_time.tv_sec >= lease_time) {
                 d_map_iter = d_map->erase(d_map_iter);
+                update = true;
                 continue;
             }
             d_map_iter++;
         }
     }
-    time_now = tv;
+    if (update) update_win();
 }

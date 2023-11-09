@@ -4,9 +4,9 @@
  * @authors Matus Vrablik (xvrab05)
  * @brief DHCP monitoring
  */
-#define UDP_HDR_LEN 8
+#define UDP_HDR_LEN sizeof(struct udphdr)
 #define dhcp_map std::map<std::string, dhcp_monitor>
-#define p_map std::map<std::string, std::tuple<int, dhcp_map>>
+#define p_map std::map<std::string, std::tuple<uint32_t, dhcp_map>>
 useconds_t *U_SLEEP = nullptr;
 bool STEP = false;
 timeval time_now = {0, 0};
@@ -53,4 +53,4 @@ p_map *global_map();
 
 void update_global_map(dhcp_monitor mon);
 
-void check_lease_time(timeval tv);
+void check_lease_time();

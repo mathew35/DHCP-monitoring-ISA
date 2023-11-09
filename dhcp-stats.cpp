@@ -52,7 +52,6 @@ int main(int argc, char **argv) {
                 STEP = true;
                 break;
             default:
-                std::cerr << "Unsuported option: " << option_char << std::endl;
                 return 1;
         }
     };

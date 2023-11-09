@@ -23,7 +23,9 @@ Create statistics from traffic picked up from continous listening on the \fIinte
 Currently only ethernet type interface is supported
 .TP
 <ip-prefix>
-Network range for which statistics will be generated. Prefix is in format N.N.N.N/X where N is from range 0-255 and X is from range 0-32. More prefixes can be given, see \fBEXAMPLES\fR
+Network range for which statistics will be generated. Prefix is in format N.N.N.N/X where N is from range 0-255 and X is from range 0-30.(prefix length of 31 and 32 has no meaning on 32bit long IPv4)
+.br
+More prefixes can be given, see \fBEXAMPLES\fR
 .TP
 .BR \-s
 Activate stepping mode. Use any keypress to process next packet.

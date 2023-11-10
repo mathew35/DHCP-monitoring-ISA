@@ -94,13 +94,6 @@ int main(int argc, char **argv) {
         }
     }
     U_SLEEP = &sleep;
-    // check prefix was given
-    if (!got_prefix) {
-        std::stringstream msg;
-        msg << "Missing <ip-prefix>!" << std::endl;
-        pcap_close(handle);
-        exit_prog(1, msg.str());
-    }
     // initialize statistics map
     bool got_prefix = false;
     for (int i = optind; i < argc; i++) {
@@ -119,6 +112,13 @@ int main(int argc, char **argv) {
         dhcp_map d_map = {};
         global_map()->emplace(ip_prefix, std::tuple<uint32_t, dhcp_map>(max_hosts, d_map));
         got_prefix = true;
+    }
+    // check prefix was given
+    if (!got_prefix) {
+        std::stringstream msg;
+        msg << "Missing <ip-prefix>!" << std::endl;
+        pcap_close(handle);
+        exit_prog(1, msg.str());
     }
     start_ncurses();
     // show table before 1st packet

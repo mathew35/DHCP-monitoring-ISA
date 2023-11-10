@@ -6,7 +6,7 @@ main: $(EXE).cpp
 	g++ $(EXE).cpp -o $(EXE) $(FLAGS)
 
 tar: $(FILES_TO_PACK)
-	tar -cvf $(LOGIN).tar $(FILES_TO_PACK) $<
+	tar -cvf $(LOGIN).tar $(FILES_TO_PACK)
 
 clean:
 	rm -f $(EXE)

@@ -54,8 +54,8 @@ int main(int argc, char **argv) {
                 break;
             case 't':
                 tmp = optarg;
-                if(tmp.empty() or !std::all_of(tmp.begin(), tmp.end(), [](unsigned char c) { return std::isdigit(c); })){
-                    exit_prog(1,"Invalid value <useconds> for '-t', use number.\n");
+                if (tmp.empty() or !std::all_of(tmp.begin(), tmp.end(), [](unsigned char c) { return std::isdigit(c); })) {
+                    exit_prog(1, "Invalid value <useconds> for '-t', use number.\n");
                 }
                 sleep = std::stoi(tmp);
                 break;
@@ -94,6 +94,13 @@ int main(int argc, char **argv) {
         }
     }
     U_SLEEP = &sleep;
+    // check prefix was given
+    if (!got_prefix) {
+        std::stringstream msg;
+        msg << "Missing <ip-prefix>!" << std::endl;
+        pcap_close(handle);
+        exit_prog(1, msg.str());
+    }
     // initialize statistics map
     bool got_prefix = false;
     for (int i = optind; i < argc; i++) {
@@ -113,12 +120,6 @@ int main(int argc, char **argv) {
         global_map()->emplace(ip_prefix, std::tuple<uint32_t, dhcp_map>(max_hosts, d_map));
         got_prefix = true;
     }
-    if (!got_prefix) {
-        std::stringstream msg;
-        msg << "Missing <ip-prefix>!" << std::endl;
-        pcap_close(handle);
-        exit_prog(1, msg.str());
-    }
     start_ncurses();
     // show table before 1st packet
     update_win();
@@ -130,8 +131,9 @@ int main(int argc, char **argv) {
     // last step to see final result
     usleep(*U_SLEEP);
     if (STEP) getch();
-    // gracefuly end ncurses
+
     pcap_close(handle);
+    // gracefuly end ncurses
     endwin();
     return 0;
 }
@@ -235,7 +237,8 @@ void handle_pcap(u_char *user, const pcap_pkthdr *header, const u_char *packet) 
 }
 
 int start_ncurses() {
-    setlocale(LC_ALL, ""); // Initialization needed for ncurses
+    // Initialization needed for ncurses
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();

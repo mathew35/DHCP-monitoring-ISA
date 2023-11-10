@@ -36,7 +36,8 @@ int main(int argc, char **argv) {
     bool read_from_interface = false;
     std::string interface = "";
     int option_char;
-    while ((option_char = getopt(argc, argv, "r:i:s")) != EOF) {
+    std::string tmp;
+    while ((option_char = getopt(argc, argv, "r:i:st:")) != EOF) {
         switch (option_char) {
             case 'r':
                 read_from_file = true;
@@ -51,6 +52,13 @@ int main(int argc, char **argv) {
                 sleep = 0;
                 STEP = true;
                 break;
+            case 't':
+                tmp = optarg;
+                if(tmp.empty() or !std::all_of(tmp.begin(), tmp.end(), [](unsigned char c) { return std::isdigit(c); })){
+                    exit_prog(1,"Invalid value <useconds> for '-t', use number.\n");
+                }
+                sleep = std::stoi(tmp);
+                break;
             default:
                 return 1;
         }
@@ -58,6 +66,11 @@ int main(int argc, char **argv) {
     if ((read_from_file and read_from_interface) or (not read_from_file and not read_from_interface)) {
         std::stringstream msg;
         msg << "Unsuported ussage of '-r' with '-i', choose only one of them.\nFor more info see 'man -l dhcp-stats.1'" << std::endl;
+        exit_prog(1, msg.str());
+    }
+    if (STEP and sleep != 0) {
+        std::stringstream msg;
+        msg << "Unsupported ussage of '-s' and '-t', choose only one of them.\nFor more info see 'man -l dhcp-stats.1'" << std::endl;
         exit_prog(1, msg.str());
     }
     // set pcap stream
@@ -82,6 +95,7 @@ int main(int argc, char **argv) {
     }
     U_SLEEP = &sleep;
     // initialize statistics map
+    bool got_prefix = false;
     for (int i = optind; i < argc; i++) {
         // Verify ip-prefix
         std::string ip_prefix = argv[i];
@@ -97,6 +111,13 @@ int main(int argc, char **argv) {
         // create dummy value with computed max_hosts
         dhcp_map d_map = {};
         global_map()->emplace(ip_prefix, std::tuple<uint32_t, dhcp_map>(max_hosts, d_map));
+        got_prefix = true;
+    }
+    if (!got_prefix) {
+        std::stringstream msg;
+        msg << "Missing <ip-prefix>!" << std::endl;
+        pcap_close(handle);
+        exit_prog(1, msg.str());
     }
     start_ncurses();
     // show table before 1st packet
@@ -110,6 +131,7 @@ int main(int argc, char **argv) {
     usleep(*U_SLEEP);
     if (STEP) getch();
     // gracefuly end ncurses
+    pcap_close(handle);
     endwin();
     return 0;
 }

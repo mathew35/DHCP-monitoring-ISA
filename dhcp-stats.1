@@ -3,8 +3,8 @@
 dhcp-stats \- DHCP traffic statistics generator 
 .SH SYNOPSIS
 .nf
-\fBdhcp-stats \-r\fR <filename> <ip-prefix> [<ip-prefix>[...]][-s]
-\fBdhcp-stats \-i\fR <interface-name> <ip-prefix> [<ip-prefix>[...]][-s]
+\fBdhcp-stats \-r\fR <filename> <ip-prefix> [<ip-prefix>[...]][-s|-t <useconds>]
+\fBdhcp-stats \-i\fR <interface-name> <ip-prefix> [<ip-prefix>[...]][-s|-t <useconds>]
 .fi
 .SH DESCRIPTION
 .nf
@@ -15,12 +15,18 @@ When prefix traffic is more or equal to 50%, informs using syslog server and STD
 .TP
 .BR \-r\fR\ <filename>
 Create statistics from pcap \fIfile\fR
+.br
+Is exclusive with '-i' option
 
 .TP
 .BR \-i\fR\ <interface-name>
 Create statistics from traffic picked up from continous listening on the \fIinterface\fR
 .br
-Currently only ethernet type interface is supported
+Currently only ethernet type interface is supported.
+.br
+(Other types are not forbidden but may not work correctly. \fBUse at your own risk!\fR)
+.br
+Is exclusive with '-r' option
 .TP
 <ip-prefix>
 Network range for which statistics will be generated. Prefix is in format N.N.N.N/X where N is from range 0-255 and X is from range 0-30.(prefix length of 31 and 32 has no meaning on 32bit long IPv4)
@@ -29,18 +35,25 @@ More prefixes can be given, see \fBEXAMPLES\fR
 .TP
 .BR \-s
 Activate stepping mode. Use any keypress to process next packet.
-
+.br
+Is exclusive with '-t' option
+.br
 \fB!WARNING! \fR arrow and other keys may input more than 1 character therefore progressing the program accordingly.
-
+.TP
+.BR \-t <useconds>
+Change default time-step to \fIuseconds\fR. 1sec = 1 000 000 usecs
+.br
+Is exclusive with '-s' option
+.TP
 By default program progesses automaticaly: 
 .br
-    Read-from-file mode: stepping every 400ms.
+Read-from-file mode: stepping every 400ms.
 .br
-    Read-from-interface mode: stepping every packet as it comes.
+Read-from-interface mode: stepping every packet as it comes.
 
 .SH EXAMPLES
 .nf
 dhcp-stats -r file.pcap -s 192.168.0.1/16
-dhcp-stats -r file.pcap 192.168.0.1/16 192.168.10.1/24 192.168.200.32/4
+dhcp-stats -r file.pcap 192.168.0.1/16 192.168.10.1/24 192.168.200.32/4 -t 200000
 dhcp-stats -i eth0 192.168.0.1/16 192.168.10.1/24 -s
 .fi

@@ -1,6 +1,4 @@
-# Netflow-exporter-ISA-project
-
-DHCP monitoring
+# DHCP-monitoring-ISA
 
 # DETAIL ZADÁNÍ
 
